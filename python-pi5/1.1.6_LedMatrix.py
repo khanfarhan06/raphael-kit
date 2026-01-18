@@ -126,32 +126,51 @@ def scrollToDisplayText():
         virtual.set_position((offset, 0))
         time.sleep(0.1)
 
-def scrollLoveMessage(name="World", speed=0.08):
+def scrollLoveMessage(name="World", speed=0.08, loops=0):
     """
-    Scroll 'I ♥ U, {name}' across the LED matrix
+    Scroll '♥ {name}' across the LED matrix with seamless infinite looping
     
     Args:
-        name: The name to display after "I ♥ U, "
+        name: The name to display after the heart
         speed: Scroll speed in seconds (lower = faster)
+        loops: Number of loops (0 = infinite, Ctrl+C to stop)
     """
     # CP437 font has a heart character at position 3
     heart_char = chr(3)  # ♥ in CP437
     
-    message = f"{heart_char} {name}"
-    print(f"→ Scrolling: '{heart_char} {name}'")
+    message = f"{heart_char} {name} "  # Space at end for gap before next heart
+    print(f"→ Scrolling: '{heart_char} {name}' (loops={'∞' if loops == 0 else loops})")
 
-    # Calculate scroll distance based on message length
-    # Each character is roughly 6-8 pixels wide in proportional font
-    # Add extra space before and after for smooth scrolling
-    # Add 8 pixels for the display width so message scrolls completely off
-    scroll_distance = 8 + len(message) * 7 - 4
+    # Get actual message width using textsize
+    font = proportional(CP437_FONT)
+    msg_width, _ = textsize(message, font)
+    
+    # Draw message twice for seamless looping:
+    # [  ♥ Mala   ♥ Mala  ]
+    #    ↑________↑
+    #    cycle_width (one full message)
     
     with canvas(virtual) as draw:
-        text(draw, (8, 0), message, fill="white", font=proportional(CP437_FONT))
+        # First copy starts at x=0 (visible immediately)
+        text(draw, (0, 0), message, fill="white", font=font)
+        # Second copy right after first (for seamless wrap)
+        text(draw, (msg_width, 0), message, fill="white", font=font)
     
-    for offset in range(scroll_distance):
+    offset = 0
+    loop_count = 0
+    infinite = (loops == 0)
+    
+    while infinite or loop_count < loops:
         virtual.set_position((offset, 0))
         time.sleep(speed)
+        offset += 1
+        
+        # When we've scrolled one full message width, reset for seamless loop
+        if offset >= msg_width:
+            offset = 0
+            loop_count += 1
+            if not infinite:
+                print(f"   Loop {loop_count}/{loops}")
 
 def expanding_square(speed=0.01):
     # Expanding square: 2x2 → 4x4 → 6x6 → 8x8
