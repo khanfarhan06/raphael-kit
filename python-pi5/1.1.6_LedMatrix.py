@@ -20,7 +20,7 @@ from luma.core.interface.serial import bitbang
 from luma.core.render import canvas
 from luma.core.virtual import viewport
 from luma.led_matrix.device import max7219
-from luma.core.legacy import text
+from luma.core.legacy import text, textsize
 from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, LCD_FONT
 import time
 
@@ -103,14 +103,19 @@ def displayLetter(letter="A"):
         text(draw, (x, y), letter, fill="white", font=font)
 
 def displayLetterProportional(letter="A"):
-    """Display a letter using proportional font (may not be perfectly centered)"""
-    print(f"→ Displaying letter '{letter}' (proportional font)...")
+    """Display a letter using proportional font, properly centered based on actual width"""
+    font = proportional(CP437_FONT)
+    
+    # Get the actual pixel dimensions of this character
+    width, height = textsize(letter, font)
+    
+    # Center on the 8x8 display
+    x = (8 - width) // 2
+    y = (8 - height) // 2
+    
+    print(f"→ Displaying '{letter}' (width={width}px, centered at x={x})")
     with canvas(device) as draw:
-        # For proportional fonts, centering is approximate
-        # Most uppercase letters are 5-7 pixels wide in CP437
-        x = 1  # Slight offset from left
-        y = 0
-        text(draw, (x, y), letter, fill="white", font=proportional(CP437_FONT))
+        text(draw, (x, y), letter, fill="white", font=font)
 
 def scrollToDisplayText():
     print("→ Scrolling text 'Hello, Nice to meet you!'...")
