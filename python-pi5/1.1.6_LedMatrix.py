@@ -44,7 +44,7 @@ print()
 try:
     # Use software SPI (bitbang) instead of hardware SPI
     serial = bitbang(SCLK=CLK_PIN, SDA=DIN_PIN, CE=CS_PIN)
-    device = max7219(serial, rotate=1)
+    device = max7219(serial, rotate=2)
     print("✓ MAX7219 initialized successfully!\n")
 except Exception as e:
     print(f"✗ Error initializing MAX7219: {e}")
@@ -132,38 +132,59 @@ def scrollLoveMessage(name="World", speed=0.08):
     # CP437 font has a heart character at position 3
     heart_char = chr(3)  # ♥ in CP437
     
-    message = f"I {heart_char} U, {name}!"
-    print(f"→ Scrolling: 'I ♥ U, {name}!'")
+    message = f"I {heart_char} U, {name}"
+    print(f"→ Scrolling: 'I ♥ U, {name}'")
     
     # Calculate scroll distance based on message length
     # Each character is roughly 6-8 pixels wide in proportional font
+    # Add extra space before and after for smooth scrolling
     # Add 8 pixels for the display width so message scrolls completely off
-    scroll_distance = len(message) * 7 + 8
+    scroll_distance = 8 + len(message) * 7 - 12
     
     with canvas(virtual) as draw:
-        text(draw, (0, 0), message, fill="white", font=proportional(CP437_FONT))
+        text(draw, (8, 0), message, fill="white", font=proportional(CP437_FONT))
     
     for offset in range(scroll_distance):
         virtual.set_position((offset, 0))
         time.sleep(speed)
+
+def boom_boom_i_heart_u():
+    # Start with square in the middle that expands outward frame by frame
+    # Then full square shrinks to the center frame by frame
+    # The print I in the center, then heart, then U
+    print("→ Displaying 'Boom Boom I ♥ U' animation...")
+    # Expanding square
+    for size in range(1, 9, 2):
+        with canvas(device) as draw:
+            draw.rectangle(
+                [(4 - size // 2, 4 - size // 2), (4 + size // 2 - 1, 4 + size // 2 - 1)],
+                outline="white",
+                fill="black"
+            )
+        time.sleep(0.2)
+    # Shrinking square
+    for size in range(7, 0, -2):
+        with canvas(device) as draw:
+            draw.rectangle(
+                [(4 - size // 2, 4 - size // 2), (4 + size // 2 - 1, 4 + size // 2 - 1)],
+                outline="white",
+                fill="black"
+            )
+        time.sleep(0.2)
+    # Display I, heart, U
+    for char in ["I", chr(3), "U"]:
+        displayLetterProportional(char)
+        time.sleep(0.5) 
 
 def main():
     print("Starting LED Matrix demo...")
     print("Press Ctrl+C to exit\n")
     
     # Change this to your name!
-    YOUR_NAME = "Mubashir"
+    YOUR_NAME = "Mala"
     
     while True:
-        displayHeart()
-        time.sleep(2)
-        scrollLoveMessage(YOUR_NAME)  # I ♥ U, {name}!
-        time.sleep(1)
-        displayRectangle()
-        time.sleep(2)
-        displayLetter()
-        time.sleep(2)
-        scrollToDisplayText()
+        boom_boom_i_heart_u()
 
 def destroy():
     print("\n\nCleaning up...")
