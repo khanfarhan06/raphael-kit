@@ -110,7 +110,7 @@ def displayLetterProportional(letter="A"):
     width, height = textsize(letter, font)
     
     # Center on the 8x8 display
-    x = (8 - width) // 2
+    x = (8 - width + 1) // 2
     y = (8 - height) // 2
     
     print(f"→ Displaying '{letter}' (width={width}px, centered at x={x})")
@@ -153,15 +153,7 @@ def scrollLoveMessage(name="World", speed=0.08):
         virtual.set_position((offset, 0))
         time.sleep(speed)
 
-def boom_boom_i_heart_u():
-    # Start with square in the middle that expands outward frame by frame
-    # Then full square shrinks to the center frame by frame
-    # Then print I in the center, then heart, then U
-    print("→ Displaying 'Boom Boom I ♥ U' animation...")
-    
-    # Use EVEN sizes (2, 4, 6, 8) for proper centering on 8x8 grid
-    # Center of 8x8 grid is between pixels 3 and 4
-    
+def expanding_square(speed=0.01):
     # Expanding square: 2x2 → 4x4 → 6x6 → 8x8
     for size in range(2, 10, 2):  # size = 2, 4, 6, 8
         half = size // 2
@@ -171,8 +163,9 @@ def boom_boom_i_heart_u():
                 outline="white",
                 fill="black"
             )
-        time.sleep(0.2)
-    
+        time.sleep(speed)
+
+def shrinking_square(speed=0.01):
     # Shrinking square: 8x8 → 6x6 → 4x4 → 2x2
     for size in range(8, 0, -2):  # size = 8, 6, 4, 2
         half = size // 2
@@ -182,10 +175,80 @@ def boom_boom_i_heart_u():
                 outline="white",
                 fill="black"
             )
-        time.sleep(0.2)
+        time.sleep(speed)
+
+def expanding_shrinking_square(speed=0.05):
+    print("→ Displaying expanding and shrinking square animation...")
+    expanding_square(speed)
+    shrinking_square(speed)
+
+def expanding_shrinking_heart(speed=0.05):
+    print("→ Displaying expanding and shrinking heart animation...")
+    # Expanding heart: 2x2 → 4x4 → 6x6 → 8x8
+    for size in range(2, 10, 2):
+        half = size // 2
+        with canvas(device) as draw:
+            # Simple approximation of heart shape using circles and triangle
+            draw.pieslice(
+                [(4 - half, 4 - half), (4, 4)],
+                0, 180,
+                outline="white",
+                fill="black"
+            )
+            draw.pieslice(
+                [(4, 4 - half), (4 + half, 4)],
+                0, 180,
+                outline="white",
+                fill="black"
+            )
+            draw.polygon(
+                [(4 - half, 4), (4 + half, 4), (4, 4 + half)],
+                outline="white",
+                fill="black"
+            )
+        time.sleep(speed)
+    
+    # Shrinking heart: 8x8 → 6x6 → 4x4 → 2x2
+    for size in range(8, 0, -2):
+        half = size // 2
+        with canvas(device) as draw:
+            draw.pieslice(
+                [(4 - half, 4 - half), (4, 4)],
+                0, 180,
+                outline="white",
+                fill="black"
+            )
+            draw.pieslice(
+                [(4, 4 - half), (4 + half, 4)],
+                0, 180,
+                outline="white",
+                fill="black"
+            )
+            draw.polygon(
+                [(4 - half, 4), (4 + half, 4), (4, 4 + half)],
+                outline="white",
+                fill="black"
+            )
+        time.sleep(speed)
+
+def boom_boom_i_heart_u():
+    # Start with square in the middle that expands outward frame by frame
+    # Then full square shrinks to the center frame by frame
+    # Then print I in the center, then heart, then U
+    print("→ Displaying 'Boom Boom I ♥ U' animation...")
+    
+    # Use EVEN sizes (2, 4, 6, 8) for proper centering on 8x8 grid
+    # Center of 8x8 grid is between pixels 3 and 4
+    
+    expanding_shrinking_square(speed=0.05)
+    time.sleep(0.2)
+    expanding_shrinking_heart(speed=0.05)
+    time.sleep(0.2)
+    
+    
     
     # Display I, heart, U
-    for char in ["I", chr(3), "U"]:
+    for char in ["I", chr(3), "U", "M", "a", "l", "a"]:
         displayLetterProportional(char)
         time.sleep(0.5) 
 
