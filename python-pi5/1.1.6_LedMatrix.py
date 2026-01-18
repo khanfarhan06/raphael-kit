@@ -183,52 +183,74 @@ def expanding_shrinking_square(speed=0.05):
     shrinking_square(speed)
 
 def expanding_shrinking_heart(speed=0.05):
+    """Animate a heart expanding then shrinking using pixel-perfect patterns"""
     print("→ Displaying expanding and shrinking heart animation...")
-    # Expanding heart: 2x2 → 4x4 → 6x6 → 8x8
-    for size in range(2, 10, 2):
-        half = size // 2
+    
+    # Hand-crafted heart patterns at different sizes (centered on 8x8)
+    # Each pattern is an 8x8 grid, 1 = LED on, 0 = LED off
+    
+    hearts = [
+        # Size 1: Tiny heart (2x3 pixels in center)
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        # Size 2: Small heart (4x4)
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        # Size 3: Medium heart (6x6)
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        # Size 4: Full heart (8x8)
+        [
+            [0, 1, 1, 0, 0, 1, 1, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+    ]
+    
+    def draw_heart(pattern):
         with canvas(device) as draw:
-            # Simple approximation of heart shape using circles and triangle
-            draw.pieslice(
-                [(4 - half, 4 - half), (4, 4)],
-                0, 180,
-                outline="white",
-                fill="black"
-            )
-            draw.pieslice(
-                [(4, 4 - half), (4 + half, 4)],
-                0, 180,
-                outline="white",
-                fill="black"
-            )
-            draw.polygon(
-                [(4 - half, 4), (4 + half, 4), (4, 4 + half)],
-                outline="white",
-                fill="black"
-            )
+            for y, row in enumerate(pattern):
+                for x, pixel in enumerate(row):
+                    if pixel:
+                        draw.point((x, y), fill="white")
+    
+    # Expanding: small → large
+    for heart in hearts:
+        draw_heart(heart)
         time.sleep(speed)
     
-    # Shrinking heart: 8x8 → 6x6 → 4x4 → 2x2
-    for size in range(8, 0, -2):
-        half = size // 2
-        with canvas(device) as draw:
-            draw.pieslice(
-                [(4 - half, 4 - half), (4, 4)],
-                0, 180,
-                outline="white",
-                fill="black"
-            )
-            draw.pieslice(
-                [(4, 4 - half), (4 + half, 4)],
-                0, 180,
-                outline="white",
-                fill="black"
-            )
-            draw.polygon(
-                [(4 - half, 4), (4 + half, 4), (4, 4 + half)],
-                outline="white",
-                fill="black"
-            )
+    # Shrinking: large → small
+    for heart in reversed(hearts):
+        draw_heart(heart)
         time.sleep(speed)
 
 def boom_boom_i_heart_u():
