@@ -54,6 +54,28 @@ except Exception as e:
 
 virtual = viewport(device, width=200, height=400)
 
+def displayHeart():
+    """Display a heart shape on the 8x8 LED matrix"""
+    print("→ Displaying heart ❤️...")
+    
+    # Heart pattern for 8x8 matrix (1 = LED on, 0 = LED off)
+    heart = [
+        [0, 1, 1, 0, 0, 1, 1, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1, 1, 1, 0],
+        [0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+    ]
+    
+    with canvas(device) as draw:
+        for y, row in enumerate(heart):
+            for x, pixel in enumerate(row):
+                if pixel:
+                    draw.point((x, y), fill="white")
+
 def displayRectangle():
     print("→ Displaying rectangle outline...")
     with canvas(device) as draw:
@@ -77,6 +99,8 @@ def main():
     print("Starting LED Matrix demo...")
     print("Press Ctrl+C to exit\n")
     while True:
+        displayHeart()
+        time.sleep(2)
         displayRectangle()
         time.sleep(2)
         displayLetter()
