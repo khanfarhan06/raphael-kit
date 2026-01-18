@@ -137,14 +137,14 @@ def scrollLoveMessage(name="World", speed=0.08):
     # CP437 font has a heart character at position 3
     heart_char = chr(3)  # ♥ in CP437
     
-    message = f"I {heart_char} U, {name}"
-    print(f"→ Scrolling: 'I ♥ U, {name}'")
-    
+    message = f"{heart_char} {name}"
+    print(f"→ Scrolling: '{heart_char} {name}'")
+
     # Calculate scroll distance based on message length
     # Each character is roughly 6-8 pixels wide in proportional font
     # Add extra space before and after for smooth scrolling
     # Add 8 pixels for the display width so message scrolls completely off
-    scroll_distance = 8 + len(message) * 7 - 12
+    scroll_distance = 8 + len(message) * 7 - 4
     
     with canvas(virtual) as draw:
         text(draw, (8, 0), message, fill="white", font=proportional(CP437_FONT))
@@ -262,27 +262,26 @@ def boom_boom_i_heart_u():
     # Use EVEN sizes (2, 4, 6, 8) for proper centering on 8x8 grid
     # Center of 8x8 grid is between pixels 3 and 4
     
-    expanding_shrinking_square(speed=0.05)
-    time.sleep(0.2)
+    # expanding_shrinking_square(speed=0.05)
+    # time.sleep(0.2)
     expanding_shrinking_heart(speed=0.05)
     time.sleep(0.2)
-    
-    
-    
-    # Display I, heart, U
-    for char in ["I", chr(3), "U", "M", "a", "l", "a"]:
+
+    # Display M, a, l, a
+    for char in ["M", "a", "l", "a"]:
         displayLetterProportional(char)
         time.sleep(0.5) 
+    
+    expanding_shrinking_heart(speed=0.05)
+    time.sleep(0.2)
 
 def main():
     print("Starting LED Matrix demo...")
     print("Press Ctrl+C to exit\n")
     
-    # Change this to your name!
-    YOUR_NAME = "Mala"
-    
     while True:
-        boom_boom_i_heart_u()
+        # boom_boom_i_heart_u()
+        scrollLoveMessage(name="Mala", speed=0.08)
 
 def destroy():
     print("\n\nCleaning up...")
