@@ -21,7 +21,7 @@ from luma.core.render import canvas
 from luma.core.virtual import viewport
 from luma.led_matrix.device import max7219
 from luma.core.legacy import text
-from luma.core.legacy.font import proportional, CP437_FONT
+from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, LCD_FONT
 import time
 
 # Software SPI using bit-banging on these GPIO pins:
@@ -81,10 +81,36 @@ def displayRectangle():
     with canvas(device) as draw:
         draw.rectangle(device.bounding_box, outline="white", fill="black")
 
-def displayLetter():
-    print("→ Displaying letter 'A'...")
+def displayLetter(letter="A"):
+    """Display a single letter centered on the 8x8 matrix"""
+    print(f"→ Displaying letter '{letter}' (centered)...")
+    
+    # For an 8x8 matrix:
+    # - CP437_FONT characters are 8 pixels tall, variable width (5-8 px)
+    # - TINY_FONT characters are 4 pixels tall, ~4 px wide
+    # - LCD_FONT characters are 8 pixels tall, 5 px wide
+    
+    # Use LCD_FONT for better centering (fixed 5px width)
+    font = LCD_FONT
+    char_width = 5   # LCD_FONT is 5 pixels wide
+    char_height = 8  # LCD_FONT is 8 pixels tall
+    
+    # Calculate centered position
+    x = (8 - char_width) // 2    # (8 - 5) // 2 = 1
+    y = (8 - char_height) // 2   # (8 - 8) // 2 = 0
+    
     with canvas(device) as draw:
-        text(draw, (0, 0), "A", fill="white", font=proportional(CP437_FONT))
+        text(draw, (x, y), letter, fill="white", font=font)
+
+def displayLetterProportional(letter="A"):
+    """Display a letter using proportional font (may not be perfectly centered)"""
+    print(f"→ Displaying letter '{letter}' (proportional font)...")
+    with canvas(device) as draw:
+        # For proportional fonts, centering is approximate
+        # Most uppercase letters are 5-7 pixels wide in CP437
+        x = 1  # Slight offset from left
+        y = 0
+        text(draw, (x, y), letter, fill="white", font=proportional(CP437_FONT))
 
 def scrollToDisplayText():
     print("→ Scrolling text 'Hello, Nice to meet you!'...")
@@ -95,12 +121,44 @@ def scrollToDisplayText():
         virtual.set_position((offset, 0))
         time.sleep(0.1)
 
+def scrollLoveMessage(name="World", speed=0.08):
+    """
+    Scroll 'I ♥ U, {name}' across the LED matrix
+    
+    Args:
+        name: The name to display after "I ♥ U, "
+        speed: Scroll speed in seconds (lower = faster)
+    """
+    # CP437 font has a heart character at position 3
+    heart_char = chr(3)  # ♥ in CP437
+    
+    message = f"I {heart_char} U, {name}!"
+    print(f"→ Scrolling: 'I ♥ U, {name}!'")
+    
+    # Calculate scroll distance based on message length
+    # Each character is roughly 6-8 pixels wide in proportional font
+    # Add 8 pixels for the display width so message scrolls completely off
+    scroll_distance = len(message) * 7 + 8
+    
+    with canvas(virtual) as draw:
+        text(draw, (0, 0), message, fill="white", font=proportional(CP437_FONT))
+    
+    for offset in range(scroll_distance):
+        virtual.set_position((offset, 0))
+        time.sleep(speed)
+
 def main():
     print("Starting LED Matrix demo...")
     print("Press Ctrl+C to exit\n")
+    
+    # Change this to your name!
+    YOUR_NAME = "Mubashir"
+    
     while True:
         displayHeart()
         time.sleep(2)
+        scrollLoveMessage(YOUR_NAME)  # I ♥ U, {name}!
+        time.sleep(1)
         displayRectangle()
         time.sleep(2)
         displayLetter()
