@@ -151,26 +151,34 @@ def scrollLoveMessage(name="World", speed=0.08):
 def boom_boom_i_heart_u():
     # Start with square in the middle that expands outward frame by frame
     # Then full square shrinks to the center frame by frame
-    # The print I in the center, then heart, then U
+    # Then print I in the center, then heart, then U
     print("→ Displaying 'Boom Boom I ♥ U' animation...")
-    # Expanding square
-    for size in range(1, 9, 2):
+    
+    # Use EVEN sizes (2, 4, 6, 8) for proper centering on 8x8 grid
+    # Center of 8x8 grid is between pixels 3 and 4
+    
+    # Expanding square: 2x2 → 4x4 → 6x6 → 8x8
+    for size in range(2, 10, 2):  # size = 2, 4, 6, 8
+        half = size // 2
         with canvas(device) as draw:
             draw.rectangle(
-                [(4 - size // 2, 4 - size // 2), (4 + size // 2 - 1, 4 + size // 2 - 1)],
+                [(4 - half, 4 - half), (4 + half - 1, 4 + half - 1)],
                 outline="white",
                 fill="black"
             )
         time.sleep(0.2)
-    # Shrinking square
-    for size in range(7, 0, -2):
+    
+    # Shrinking square: 8x8 → 6x6 → 4x4 → 2x2
+    for size in range(8, 0, -2):  # size = 8, 6, 4, 2
+        half = size // 2
         with canvas(device) as draw:
             draw.rectangle(
-                [(4 - size // 2, 4 - size // 2), (4 + size // 2 - 1, 4 + size // 2 - 1)],
+                [(4 - half, 4 - half), (4 + half - 1, 4 + half - 1)],
                 outline="white",
                 fill="black"
             )
         time.sleep(0.2)
+    
     # Display I, heart, U
     for char in ["I", chr(3), "U"]:
         displayLetterProportional(char)
