@@ -11,8 +11,15 @@ import time
 
 def game_loop():
     print("Starting the Snake game...")
+    print("Press joystick button to start!")
+    
     input_handler = InputHandler()
     renderer = Renderer()
+    
+    # Loop intro animation until button is pressed
+    renderer.play_intro_animation_loop(should_stop=input_handler.is_button_pressed)
+    
+    print("Game starting...")
     game_state = GameState()
     speed = GAME_SPEED
 
