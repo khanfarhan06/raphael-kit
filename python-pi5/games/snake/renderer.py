@@ -16,7 +16,7 @@ It does not use hardware SPI to avoid conflicts with other peripherals.
 Implementation does not use LEDMatrix class from gpiozero due to lack of software SPI support.
 """
 
-from config import LED_CLK, LED_DIN, LED_CS, INPUT_POLL_INTERVAL, DEFAULT_ANIMATION_INTERVAL, SCROLL_SPEED
+from config import LED_CLK, LED_DIN, LED_CS, INPUT_POLL_INTERVAL, DEFAULT_ANIMATION_INTERVAL, SCROLL_SPEED, BOARD_WIDTH, BOARD_HEIGHT
 from luma.core.interface.serial import bitbang
 from luma.core.render import canvas
 from luma.core.virtual import viewport
@@ -56,12 +56,17 @@ class Renderer:
             should_start_game = self._play_face_animation(should_stop)
             if should_start_game:
                 break
-        self._play_heart_animation()
-        self.clear()
+        # Spiral fade out: full → empty from outside in
+        self._play_spiral_fade_out(speed=0.02)
         time.sleep(0.2)
     
-    def play_game_over_animation(self, score: int, should_stop):
-        self._play_cross_animation()
+    def play_game_over_animation(self, game_state, score: int, should_stop):
+        """
+        Play game over sequence:
+        1. Blank → final game frame → blank → spiral fill in
+        2. Scrolling score until button pressed
+        """
+        self._play_game_over_sequence(game_state)
         self._show_scrolling_score(score, should_stop)
         self.clear()
         time.sleep(0.2)
@@ -79,6 +84,64 @@ class Renderer:
             if self._wait_or_stop(DEFAULT_ANIMATION_INTERVAL, should_stop):
                 return True
         return False
+    
+    def _play_spiral_fade_out(self, speed: float = 0.02):
+        """
+        Spiral fade out animation: full screen → LEDs turn off from outside → inside.
+        """
+        # Start with all LEDs on
+        lit_pixels = set(SPIRAL_OUTSIDE_IN)  # All 64 pixels
+        
+        for coord in SPIRAL_OUTSIDE_IN:
+            lit_pixels.discard(coord)  # Turn off this pixel
+            self._draw_pixels(lit_pixels)
+            time.sleep(speed)
+        
+        # End with blank screen
+        self.clear()
+    
+    def _play_spiral_fade_in(self, speed: float = 0.02):
+        """
+        Spiral fade in animation: empty screen → LEDs turn on from inside → outside.
+        """
+        lit_pixels = set()
+        
+        for coord in SPIRAL_INSIDE_OUT:
+            lit_pixels.add(coord)  # Turn on this pixel
+            self._draw_pixels(lit_pixels)
+            time.sleep(speed)
+    
+    def _draw_pixels(self, pixels: set[tuple[int, int]]):
+        """Draw only the specified pixel coordinates."""
+        with canvas(self.matrix) as draw:
+            for x, y in pixels:
+                draw.point((x, y), fill="white")
+    
+    def _play_game_over_sequence(self, game_state):
+        """
+        Game over sequence:
+        1. Blank screen
+        2. Show final game frame (snake + food at death)
+        3. Blank screen
+        4. Spiral fade in from inside out
+        """
+        speed = DEFAULT_ANIMATION_INTERVAL / 2
+        
+        # 1. Blank screen
+        self.clear()
+        time.sleep(speed)
+        
+        # 2. Show final game frame
+        self.draw_game_frame(game_state)
+        time.sleep(speed * 2)
+        
+        # 3. Blank screen
+        self.clear()
+        time.sleep(speed)
+        
+        # 4. Spiral fade in
+        self._play_spiral_fade_in(speed=0.015)
+        time.sleep(speed)
     
     def _play_heart_animation(self):
         speed = DEFAULT_ANIMATION_INTERVAL/2
@@ -164,3 +227,51 @@ class Renderer:
     
     def clear(self):
         self.matrix.clear()
+
+
+def _generate_spiral_coords_outside_in(width: int, height: int) -> list[tuple[int, int]]:
+    """
+    Generate coordinates in spiral order from outside edge towards center.
+    Goes clockwise starting from top-left corner.
+    """
+    coords = []
+    top, bottom, left, right = 0, height - 1, 0, width - 1
+    
+    while top <= bottom and left <= right:
+        # Top row: left to right
+        for x in range(left, right + 1):
+            coords.append((x, top))
+        top += 1
+        
+        # Right column: top to bottom
+        for y in range(top, bottom + 1):
+            coords.append((right, y))
+        right -= 1
+        
+        # Bottom row: right to left
+        if top <= bottom:
+            for x in range(right, left - 1, -1):
+                coords.append((x, bottom))
+            bottom -= 1
+        
+        # Left column: bottom to top
+        if left <= right:
+            for y in range(bottom, top - 1, -1):
+                coords.append((left, y))
+            left += 1
+    
+    return coords
+
+
+def _generate_spiral_coords_inside_out(width: int, height: int) -> list[tuple[int, int]]:
+    """
+    Generate coordinates in spiral order from center towards outside edge.
+    Simply reverses the outside-in spiral.
+    """
+    return list(reversed(_generate_spiral_coords_outside_in(width, height)))
+
+
+# Pre-compute spiral coordinates at module load
+SPIRAL_OUTSIDE_IN = _generate_spiral_coords_outside_in(BOARD_WIDTH, BOARD_HEIGHT)
+SPIRAL_INSIDE_OUT = _generate_spiral_coords_inside_out(BOARD_WIDTH, BOARD_HEIGHT)
+

@@ -18,28 +18,30 @@ def game_loop():
         # Loop intro animation until button is pressed
         renderer.play_intro_animation_loop(should_stop=input_handler.is_button_pressed)
         
-        score = _play_game(input_handler, renderer)
+        game_state = _play_game(input_handler, renderer)
         
-        renderer.play_game_over_animation(score, should_stop=input_handler.is_button_pressed)
-        print(f"Game over! Score: {score}")
+        renderer.play_game_over_animation(game_state, game_state.score, should_stop=input_handler.is_button_pressed)
+        print(f"Game over! Score: {game_state.score}")
 
-def _play_game(input_handler, renderer):
+
+def _play_game(input_handler: InputHandler, renderer: Renderer) -> GameState:
+    """Play one round of the game, return final game state."""
     print("Game starting...")
     game_state = GameState()
-    speed = GAME_SPEED
 
     renderer.draw_game_frame(game_state)
     print(f"Score: {game_state.score}")
 
     while not game_state.game_over:
-        direction = input_handler.poll_for_direction_input(timeout=speed)
+        direction = input_handler.poll_for_direction_input(timeout=GAME_SPEED)
         
         # move_snake handles: direction validation, movement, food eating, collision
         game_state.move_snake(direction)
         
         renderer.draw_game_frame(game_state)
         print(f"Score: {game_state.score}")
-    return game_state.score
+    
+    return game_state
 
 
 if __name__ == "__main__":
