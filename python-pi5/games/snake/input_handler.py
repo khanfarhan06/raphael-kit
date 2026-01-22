@@ -58,6 +58,10 @@ class InputHandler:
             time.sleep(INPUT_POLL_INTERVAL)
             elapsed_time += INPUT_POLL_INTERVAL
         return last_direction
+    
+    def has_joystick_moved(self):
+        direction = self.get_direction()
+        return direction != Direction.NONE
 
     def is_button_pressed(self):
         return self.button.is_pressed

@@ -59,6 +59,7 @@ def _hex_to_pattern(hex_value: int) -> list[list[int]]:
             bit = (byte >> (7 - col)) & 1
             row_pixels.append(bit)
         pattern.append(row_pixels)
+    pattern.reverse()  # Reverse to match top-down order
     return pattern
 
 

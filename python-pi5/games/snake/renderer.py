@@ -81,6 +81,7 @@ class Renderer:
         return False
     
     def _play_heart_animation(self):
+        speed = DEFAULT_ANIMATION_INTERVAL/2
         # Show expanding heart animation
         hearts = [
             SPRITES[Sprite.HEART_DOT],
@@ -90,13 +91,19 @@ class Renderer:
         ]
         for heart in hearts:
             self._draw_pattern(heart)
-            time.sleep(DEFAULT_ANIMATION_INTERVAL)
+            time.sleep(speed)
         # Show contracting heart animation
         for heart in reversed(hearts):
             self._draw_pattern(heart)
-            time.sleep(DEFAULT_ANIMATION_INTERVAL)
-    
+            time.sleep(speed)
+
     def _play_cross_animation(self):
+        speed = DEFAULT_ANIMATION_INTERVAL/2
+        self._draw_pattern(SPRITES[Sprite.EMPTY])
+        time.sleep(speed)
+        self._draw_pattern(SPRITES[Sprite.FULL])
+        time.sleep(speed)
+
         crosses = [
             SPRITES[Sprite.CROSS_DOT],
             SPRITES[Sprite.CROSS_QUARTER],
@@ -105,12 +112,12 @@ class Renderer:
         ]
         for cross in crosses:
             self._draw_pattern(cross)
-            time.sleep(DEFAULT_ANIMATION_INTERVAL)
+            time.sleep(speed)
         for i in range(3):
             self._draw_pattern(SPRITES[Sprite.EMPTY])
-            time.sleep(DEFAULT_ANIMATION_INTERVAL)
-            self._draw_pattern(SPRITES[Sprite.FULL])
-            time.sleep(DEFAULT_ANIMATION_INTERVAL)
+            time.sleep(speed)
+            self._draw_pattern(SPRITES[Sprite.CROSS_FULL])
+            time.sleep(speed)
     
     def _show_scrolling_score(self, score: int, should_stop):
         """Show infinite scrolling score until should_stop() returns True."""
