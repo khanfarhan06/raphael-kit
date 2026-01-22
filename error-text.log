@@ -1,105 +1,101 @@
-(venv) dork-knight@raspberrypi:~/code/pi-projects/raphael-kit $ python3 python-pi5/2.1.9_3_joystick_software_spi.py 
-==================================================
-Joystick - Software SPI Mode (MCP3008)
-==================================================
-
-Wiring required:
-  MCP3008:
-    VDD/VREF -> Pin 1  (3.3V)
-    AGND/DGND -> Pin 6 (Ground)
-    CLK      -> Pin 29 (GPIO 5)
-    DOUT     -> Pin 31 (GPIO 6)
-    DIN      -> Pin 33 (GPIO 13)
-    CS       -> Pin 35 (GPIO 19)
-  Joystick:
-    VRX      -> MCP3008 CH0
-    VRY      -> MCP3008 CH1
-    SW       -> Pin 37 (GPIO 26)
-
-✗ Error initializing: 'GPIO busy'
-
-Make sure you've wired correctly to the specified pins.
-Traceback (most recent call last):
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 80, in __call__
-    self = cls._instances[key]()
-           ~~~~~~~~~~~~~~^^^^^
-KeyError: ('GPIO5', 'GPIO19')
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 80, in __call__
-    self = cls._instances[key]()
-           ~~~~~~~~~~~~~~^^^^^
-KeyError: ('GPIO5', 'GPIO13', 'GPIO6')
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/pi.py", line 411, in pin
-    pin = self.pins[info]
-          ~~~~~~~~~^^^^^^
-KeyError: PinInfo(number=33, name='GPIO13', names=frozenset({'GPIO13', 'BCM13', 'BOARD33', '13', 'WPI23', 'J8:33', 13}), pull='', row=17, col=1, interfaces=frozenset({'', 'gpio', 'spi', 'uart', 'dpi', 'i2c', 'pwm'}))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/dork-knight/code/pi-projects/raphael-kit/python-pi5/2.1.9_3_joystick_software_spi.py", line 61, in <module>
-    x_axis = MCP3008(channel=0, clock_pin=MCP_CLK, mosi_pin=MCP_MOSI,
-                     miso_pin=MCP_MISO, select_pin=MCP_CS)
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 108, in __call__
-    self = super().__call__(*args, **kwargs)
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 428, in __init__
-    super().__init__(channel, differential, max_voltage, **spi_args)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 286, in __init__
-    super().__init__(channel, 10, differential, max_voltage, **spi_args)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 182, in __init__
-    super().__init__(bits, max_voltage, **spi_args)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 129, in __init__
-    super().__init__(shared=True, **spi_args)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 32, in __init__
-    self._spi = self.pin_factory.spi(**spi_args)
-                ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/pi.py", line 472, in spi
-    return self._get_spi_class(shared, hardware=False)(
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-        pin_factory=self, **spi_args)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 83, in __call__
-    self = super().__call__(*args, **kwargs)
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/spi.py", line 45, in __init__
-    self._bus = SPISoftwareBus(
-                ~~~~~~~~~~~~~~^
-        clock_pin, mosi_pin, miso_pin, pin_factory=pin_factory)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 83, in __call__
-    self = super().__call__(*args, **kwargs)
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/spi.py", line 152, in __init__
-    self.mosi = OutputDevice(mosi_pin, pin_factory=pin_factory)
-                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 108, in __call__
-    self = super().__call__(*args, **kwargs)
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/output_devices.py", line 74, in __init__
-    super().__init__(pin, pin_factory=pin_factory)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/mixins.py", line 75, in __init__
-    super().__init__(*args, **kwargs)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 553, in __init__
-    pin = self.pin_factory.pin(pin)
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/pi.py", line 413, in pin
-    pin = self.pin_class(self, info)
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/lgpio.py", line 126, in __init__
-    lgpio.gpio_claim_input(
-    ~~~~~~~~~~~~~~~~~~~~~~^
-        self.factory._handle, self._number, lgpio.SET_PULL_NONE)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/lgpio.py", line 755, in gpio_claim_input
-    return _u2i(_lgpio._gpio_claim_input(handle&0xffff, lFlags, gpio))
-  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/lgpio.py", line 458, in _u2i
-    raise error(error_text(v))
-lgpio.error: 'GPIO busy'
+(venv) dork-knight@raspberrypi:~/code/pi-projects/raphael-kit $ pinctrl
+ 0: ip    pu | hi // ID_SDA/GPIO0 = input
+ 1: ip    pu | hi // ID_SCL/GPIO1 = input
+ 2: a3    pu | lo // GPIO2 = SDA1
+ 3: a3    pu | hi // GPIO3 = SCL1
+ 4: no    pu | -- // GPIO4 = none
+ 5: ip    pn | lo // GPIO5 = input
+ 6: op dh pn | hi // GPIO6 = output
+ 7: op dh pu | hi // GPIO7 = output
+ 8: op dh pu | hi // GPIO8 = output
+ 9: a0    pn | lo // GPIO9 = SPI0_MISO
+10: a0    pn | lo // GPIO10 = SPI0_MOSI
+11: a0    pn | lo // GPIO11 = SPI0_SCLK
+12: no    pd | -- // GPIO12 = none
+13: ip    pu | hi // GPIO13 = input
+14: no    pd | -- // GPIO14 = none
+15: no    pd | -- // GPIO15 = none
+16: no    pd | -- // GPIO16 = none
+17: no    pd | -- // GPIO17 = none
+18: no    pd | -- // GPIO18 = none
+19: no    pd | -- // GPIO19 = none
+20: no    pd | -- // GPIO20 = none
+21: no    pd | -- // GPIO21 = none
+22: no    pd | -- // GPIO22 = none
+23: no    pd | -- // GPIO23 = none
+24: no    pd | -- // GPIO24 = none
+25: no    pd | -- // GPIO25 = none
+26: no    pd | -- // GPIO26 = none
+27: no    pd | -- // GPIO27 = none
+28: op dh pd | hi // PCIE_RP1_WAKE/GPIO28 = output
+29: no    pu | hi // FAN_TACH/GPIO29 = none
+30: no    pu | -- // HOST_SDA/GPIO30 = none
+31: no    pu | -- // HOST_SCL/GPIO31 = none
+32: op dh pd | hi // ETH_RST_N/GPIO32 = output
+33: no    pd | hi // GPIO33 = none
+34: op dl pd | lo // CD0_IO0_MICCLK/GPIO34 = output
+35: no    pd | lo // CD0_IO0_MICDAT0/GPIO35 = none
+36: no    pd | lo // RP1_PCIE_CLKREQ_N/GPIO36 = none
+37: no    pd | lo // GPIO37 = none
+38: ip    pd | hi // CD0_SDA/GPIO38 = input
+39: ip    pd | hi // CD0_SCL/GPIO39 = input
+40: ip    pd | hi // CD1_SDA/GPIO40 = input
+41: ip    pd | hi // CD1_SCL/GPIO41 = input
+42: a2    pd | hi // USB_VBUS_EN/GPIO42 = VBUS_EN1
+43: a2    pu | hi // USB_OC_N/GPIO43 = VBUS_OC1
+44: op dh pd | hi // RP1_STAT_LED/GPIO44 = output
+45: a0    pd | hi // FAN_PWM/GPIO45 = PWM1_CHAN3
+46: op dl pd | lo // CD1_IO0_MICCLK/GPIO46 = output
+47: no    pd | lo // 2712_WAKE/GPIO47 = none
+48: no    pd | lo // CD1_IO1_MICDAT1/GPIO48 = none
+49: op dh pd | hi // EN_MAX_USB_CUR/GPIO49 = output
+50: no    pd | -- // GPIO50 = none
+51: no    pd | -- // GPIO51 = none
+52: no    pu | -- // GPIO52 = none
+53: no    pu | hi // GPIO53 = none
+101: op dh pu | hi // 2712_BOOT_CS_N/GPIO1 = output
+102: a7    pn | hi // 2712_BOOT_MISO/GPIO2 = VC_SPI0_MISO
+103: a6    pn | hi // 2712_BOOT_MOSI/GPIO3 = VC_SPI0_MOSI
+104: a6    pn | lo // 2712_BOOT_SCLK/GPIO4 = VC_SPI0_SCLK
+110: ip    pd | lo // GPIO10 = input
+111: ip    pd | lo // GPIO11 = input
+112: ip    pd | lo // GPIO12 = input
+113: ip    pd | lo // GPIO13 = input
+114: a1    pd | lo // PCIE_SDA/GPIO14 = SPI_S_MOSI_OR_BSC_S_SDA
+115: a1    pd | lo // PCIE_SCL/GPIO15 = SPI_S_SCK_OR_BSC_S_SCL
+118: ip    pd | lo // GPIO18 = input
+119: ip    pd | lo // GPIO19 = input
+120: ip    pu | hi // PWR_GPIO/GPIO20 = input
+121: ip    pd | lo // 2712_G21_FS/GPIO21 = input
+122: ip    pu | hi // GPIO22 = input
+123: ip    pd | lo // GPIO23 = input
+124: a4    pn | lo // BT_RTS/GPIO24 = UART_RTS_0
+125: a4    pu | lo // BT_CTS/GPIO25 = UART_CTS_0
+126: a4    pn | hi // BT_TXD/GPIO26 = UART_TXD_0
+127: a4    pu | hi // BT_RXD/GPIO27 = UART_RXD_0
+128: op dh pd | hi // WL_ON/GPIO28 = output
+129: op dh pd | hi // BT_ON/GPIO29 = output
+130: a1    pn | lo // WIFI_SDIO_CLK/GPIO30 = SD2_CLK
+131: a1    pu | hi // WIFI_SDIO_CMD/GPIO31 = SD2_CMD
+132: a1    pu | hi // WIFI_SDIO_D0/GPIO32 = SD2_DAT0
+133: a1    pu | hi // WIFI_SDIO_D1/GPIO33 = SD2_DAT1
+134: a1    pu | hi // WIFI_SDIO_D2/GPIO34 = SD2_DAT2
+135: a1    pu | hi // WIFI_SDIO_D3/GPIO35 = SD2_DAT3
+200: ip    pd | hi // RP1_SDA/AON_GPIO0 = input
+201: ip    pd | hi // RP1_SCL/AON_GPIO1 = input
+202: op dh pd | hi // RP1_RUN/AON_GPIO2 = output
+203: op dh pd | hi // SD_IOVDD_SEL/AON_GPIO3 = output
+204: op dh pd | hi // SD_PWR_ON/AON_GPIO4 = output
+205: a4    pu | lo // SD_CDET_N/AON_GPIO5 = SD_CARD_PRES_G
+206: ip    pd | hi // SD_FLG_N/AON_GPIO6 = input
+208: ip    pd | lo // 2712_WAKE/AON_GPIO8 = input
+209: op dh pd | hi // 2712_STAT_LED/AON_GPIO9 = output
+212: ip    pd | lo // PMIC_INT/AON_GPIO12 = input
+213: a2    pu | hi // UART_TX_FS/AON_GPIO13 = VC_TXD0
+214: a3    pu | hi // UART_RX_FS/AON_GPIO14 = VC_RXD0
+232: a1    -- | hi // HDMI0_SCL/AON_SGPIO0 = HDMI_TX0_BSC_SCL
+233: a1    -- | hi // HDMI0_SDA/AON_SGPIO1 = HDMI_TX0_BSC_SDA
+234: a1    -- | hi // HDMI1_SCL/AON_SGPIO2 = HDMI_TX1_BSC_SCL
+235: a1    -- | hi // HDMI1_SDA/AON_SGPIO3 = HDMI_TX1_BSC_SDA
+236: a2    -- | hi // PMIC_SCL/AON_SGPIO4 = BSC_M2_SCL
+237: a2    -- | hi // PMIC_SDA/AON_SGPIO5 = BSC_M2_SDA
