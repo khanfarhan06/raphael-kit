@@ -1,0 +1,51 @@
+"""
+Handles input from the joystick for the Snake game.
+Initializes the MCP3008 ADC using software SPI on custom GPIO pins.
+Wiring required:
+    MCP3008:
+        VDD/VREF  -> Pin 1  (3.3V)
+        AGND/DGND -> Pin 6 (Ground)
+        CLK       -> Pin 29 (GPIO 23)
+        DOUT      -> Pin 31 (GPIO 24)
+        DIN       -> Pin 33 (GPIO 25)
+        CS        -> Pin 35 (GPIO 12)
+    Joystick:
+        GND       -> Pin 6 (Ground)
+        +5V       -> Pin 1 (3.3V)
+        VRX       -> MCP3008 CH0
+        VRY       -> MCP3008 CH1
+        SW        -> Pin 37 (GPIO 26)    
+All wirings are different from Pironman's usual pins to avoid conflicts.
+All wirings are different from LED matrix's pins to avoid conflicts.    
+"""
+from gpiozero import MCP3008, Button
+from direction import Direction
+from config import MCP_CLK, MCP_MOSI, MCP_MISO, MCP_CS, BTN_PIN
+
+class InputHandler:
+    def __init__(self):
+        self.joystick_x = MCP3008(channel=0, clock_pin=MCP_CLK, mosi_pin=MCP_MOSI, miso_pin=MCP_MISO, select_pin=MCP_CS)
+        self.joystick_y = MCP3008(channel=1, clock_pin=MCP_CLK, mosi_pin=MCP_MOSI, miso_pin=MCP_MISO, select_pin=MCP_CS)
+        self.button = Button(BTN_PIN)
+    
+    def get_direction(self):
+        x = self.joystick_x.value
+        y = self.joystick_y.value
+
+        threshold = 0.2
+        mid = 0.5
+        direction = Direction.NONE
+
+        if x < mid - threshold:
+            direction = Direction.LEFT
+        elif x > mid + threshold:
+            direction = Direction.RIGHT
+        elif y < mid - threshold:
+            direction = Direction.UP
+        elif y > mid + threshold:
+            direction = Direction.DOWN
+        
+        return direction
+    
+    def is_button_pressed(self):
+        return self.button.is_pressed

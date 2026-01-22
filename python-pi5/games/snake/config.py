@@ -1,0 +1,17 @@
+"""
+COnfiguration for constant values used in the snake game.
+"""
+
+# Joystick MCP3008 Software SPI Pins
+MCP_CLK = 23    # Pin 29 - Clock
+MCP_MOSI = 25   # Pin 33 - Data to MCP3008 (DIN)
+MCP_MISO = 24   # Pin 31 - Data from MCP3008 (DOUT)
+MCP_CS = 12     # Pin 35 - Chip Select
+# Joystick button pin
+BTN_PIN = 26    # Pin 37
+
+
+# LED Matrix Software SPI Pins
+LED_CLK = 16    # Pin 36 - Clock
+LED_DIN = 20    # Pin 38 - Data In
+LED_CS = 21     # Pin 40 - Chip Select
