@@ -11,10 +11,10 @@ Wiring (using regular GPIO pins, NOT hardware SPI):
     VREF        ->  Pin 1  (3.3V)
     AGND        ->  Pin 6  (Ground)
     DGND        ->  Pin 6  (Ground)
-    CLK         ->  Pin 29 (GPIO 5)
-    DOUT (MISO) ->  Pin 31 (GPIO 6)
-    DIN (MOSI)  ->  Pin 33 (GPIO 13)
-    CS          ->  Pin 35 (GPIO 19)
+    CLK         ->  Pin 16 (GPIO 23)
+    DOUT (MISO) ->  Pin 18 (GPIO 24)
+    DIN (MOSI)  ->  Pin 22 (GPIO 25)
+    CS          ->  Pin 32 (GPIO 12)
 
     Joystick        Connections
     --------        ----------------
@@ -24,17 +24,17 @@ Wiring (using regular GPIO pins, NOT hardware SPI):
     VRY         ->  MCP3008 CH1
     SW          ->  Pin 37 (GPIO 26) + Ground
 
-These pins are near the bottom of the GPIO header, away from Pironman's usual pins.
+These pins (23, 24, 25) are in the middle of the GPIO header and typically free.
 """
 
 from gpiozero import MCP3008, Button
 import time
 
 # Software SPI pins for MCP3008
-MCP_CLK = 5    # Pin 29 - Clock
-MCP_MOSI = 13  # Pin 33 - Data to MCP3008 (DIN)
-MCP_MISO = 6   # Pin 31 - Data from MCP3008 (DOUT)
-MCP_CS = 19    # Pin 35 - Chip Select
+MCP_CLK = 23   # Pin 16 - Clock
+MCP_MOSI = 25  # Pin 22 - Data to MCP3008 (DIN)
+MCP_MISO = 24  # Pin 18 - Data from MCP3008 (DOUT)
+MCP_CS = 12    # Pin 32 - Chip Select
 
 # Joystick button pin
 BTN_PIN = 26   # Pin 37
@@ -46,10 +46,10 @@ print(f"\nWiring required:")
 print(f"  MCP3008:")
 print(f"    VDD/VREF -> Pin 1  (3.3V)")
 print(f"    AGND/DGND -> Pin 6 (Ground)")
-print(f"    CLK      -> Pin 29 (GPIO {MCP_CLK})")
-print(f"    DOUT     -> Pin 31 (GPIO {MCP_MISO})")
-print(f"    DIN      -> Pin 33 (GPIO {MCP_MOSI})")
-print(f"    CS       -> Pin 35 (GPIO {MCP_CS})")
+print(f"    CLK      -> Pin 16 (GPIO {MCP_CLK})")
+print(f"    DOUT     -> Pin 18 (GPIO {MCP_MISO})")
+print(f"    DIN      -> Pin 22 (GPIO {MCP_MOSI})")
+print(f"    CS       -> Pin 32 (GPIO {MCP_CS})")
 print(f"  Joystick:")
 print(f"    VRX      -> MCP3008 CH0")
 print(f"    VRY      -> MCP3008 CH1")
