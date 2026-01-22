@@ -17,4 +17,8 @@ LED_DIN = 20    # Pin 38 - Data In
 LED_CS = 21     # Pin 40 - Chip Select
 
 # Game settings
-GAME_SPEED = 1  # Delay between game updates in seconds
+GAME_SPEED = 0.5  # Delay between game updates in seconds
+BOARD_WIDTH = 8
+BOARD_HEIGHT = 8
+INITIAL_SNAKE_LENGTH = 3
+INPUT_POLL_INTERVAL = 0.05  # Interval to poll joystick input in seconds

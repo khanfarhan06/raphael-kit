@@ -20,7 +20,8 @@ All wirings are different from LED matrix's pins to avoid conflicts.
 """
 from gpiozero import MCP3008, Button
 from direction import Direction
-from config import MCP_CLK, MCP_MOSI, MCP_MISO, MCP_CS, BTN_PIN
+from config import MCP_CLK, MCP_MOSI, MCP_MISO, MCP_CS, BTN_PIN, INPUT_POLL_INTERVAL
+import time
 
 class InputHandler:
     def __init__(self):
@@ -32,7 +33,7 @@ class InputHandler:
         x = self.joystick_x.value
         y = self.joystick_y.value
 
-        threshold = 0.2
+        threshold = 0.1
         mid = 0.5
         direction = Direction.NONE
 
@@ -47,5 +48,16 @@ class InputHandler:
         
         return direction
     
+    def poll_for_direction_input(self, timeout):
+        last_direction = Direction.NONE
+        elapsed_time = 0.0
+        while elapsed_time < timeout:
+            direction = self.get_direction()
+            if direction != Direction.NONE:
+                last_direction = direction
+            time.sleep(INPUT_POLL_INTERVAL)
+            elapsed_time += INPUT_POLL_INTERVAL
+        return last_direction
+
     def is_button_pressed(self):
         return self.button.is_pressed

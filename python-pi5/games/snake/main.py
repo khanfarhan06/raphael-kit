@@ -18,10 +18,9 @@ def game_loop():
 
     renderer.draw_frame(game_state)
     print(f"Score: {game_state.score}")
-    time.sleep(speed)
 
     while not game_state.game_over:
-        direction = input_handler.get_direction()
+        direction = input_handler.poll_for_direction_input(timeout=speed)
         
         game_state.move_snake(direction)
         game_state.check_collision()
@@ -31,7 +30,6 @@ def game_loop():
         
         renderer.draw_frame(game_state)
         print(f"Score: {game_state.score}")
-        time.sleep(speed)
 
 
 if __name__ == "__main__":
