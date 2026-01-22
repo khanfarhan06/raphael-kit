@@ -15,3 +15,6 @@ BTN_PIN = 26    # Pin 37
 LED_CLK = 16    # Pin 36 - Clock
 LED_DIN = 20    # Pin 38 - Data In
 LED_CS = 21     # Pin 40 - Chip Select
+
+# Game settings
+GAME_SPEED = 1  # Delay between game updates in seconds

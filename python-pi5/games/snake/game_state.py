@@ -52,18 +52,24 @@ class GameState:
         self.food_eaten = True
         self.spawn_food()
     
-    def move_snake(self):
+    def move_snake(self, new_direction):
+        if new_direction != Direction.NONE and self.is_valid_turn(new_direction):
+            self.direction = new_direction
         head_x, head_y = self.snake_positions[0]
         if self.direction == Direction.UP:
-            new_head = (head_x, head_y - 1)
+            head_y -= 1
         elif self.direction == Direction.DOWN:
-            new_head = (head_x, head_y + 1)
+            head_y += 1
         elif self.direction == Direction.LEFT:
-            new_head = (head_x - 1, head_y)
+            head_x -= 1
         elif self.direction == Direction.RIGHT:
-            new_head = (head_x + 1, head_y)
+            head_x += 1
         else:
-            new_head = (head_x, head_y)  # No movement
+            pass  # This will not happen due to checks above
+
+        head_x %= self.grid_size
+        head_y %= self.grid_size
+        new_head = (head_x, head_y)
         
         self.snake_positions.appendleft(new_head)
         
@@ -75,3 +81,12 @@ class GameState:
             self.food_eaten = False  # Reset food eaten flag
         
         self.check_collision()
+    
+    def is_valid_turn(self, new_direction):
+        opposite_directions = {
+            Direction.UP: Direction.DOWN,
+            Direction.DOWN: Direction.UP,
+            Direction.LEFT: Direction.RIGHT,
+            Direction.RIGHT: Direction.LEFT
+        }
+        return new_direction != opposite_directions.get(self.direction, None)
