@@ -16,10 +16,13 @@ It does not use hardware SPI to avoid conflicts with other peripherals.
 Implementation does not use LEDMatrix class from gpiozero due to lack of software SPI support.
 """
 
-from config import LED_CLK, LED_DIN, LED_CS, INPUT_POLL_INTERVAL, DEFAULT_ANIMATION_INTERVAL
+from config import LED_CLK, LED_DIN, LED_CS, INPUT_POLL_INTERVAL, DEFAULT_ANIMATION_INTERVAL, SCROLL_SPEED
 from luma.core.interface.serial import bitbang
 from luma.core.render import canvas
+from luma.core.virtual import viewport
 from luma.led_matrix.device import max7219
+from luma.core.legacy import text, textsize
+from luma.core.legacy.font import proportional, CP437_FONT
 from sprites import Sprite, SPRITES
 import time
 
@@ -59,10 +62,7 @@ class Renderer:
     
     def play_game_over_animation(self, score: int, should_stop):
         self._play_cross_animation()
-        self._show_score(score)
-        while True:
-            if self._wait_or_stop(DEFAULT_ANIMATION_INTERVAL, should_stop):
-                break
+        self._show_scrolling_score(score, should_stop)
         self.clear()
         time.sleep(0.2)
     
@@ -112,24 +112,33 @@ class Renderer:
             self._draw_pattern(SPRITES[Sprite.FULL])
             time.sleep(DEFAULT_ANIMATION_INTERVAL)
     
-    def _show_scrolling_score(self, score: int):
-        # Show infinite scrolling score until should_stop() returns True.
-        # For smooth scrolling we will use virtual viewport.
-        # Draw the score message twice for seamless looping.
+    def _show_scrolling_score(self, score: int, should_stop):
+        """Show infinite scrolling score until should_stop() returns True."""
+        # For smooth scrolling we use virtual viewport.
+        # Draw the score message twice for seamless looping:
         # [   Score: 100    Score: 100  ]
-        #    ↑________↑
-        #    cycle_width (one full message)
-        virtual = viewport(self.matrix, width=200, height=400)
+        #    ↑_____________↑
+        #    message_width (one full cycle)
+        
+        message = f"Score: {score}  "  # Extra space for gap
+        font = proportional(CP437_FONT)
+        message_width, _ = textsize(message, font)
+        
+        virtual = viewport(self.matrix, width=200, height=8)
         with canvas(virtual) as draw:
-            text(draw, (0, 0), f"Score: {score}", fill="white", font=proportional(CP437_FONT))
-            text(draw, (score_width, 0), f"Score: {score}", fill="white", font=proportional(CP437_FONT))
+            # First copy
+            text(draw, (0, 0), message, fill="white", font=font)
+            # Second copy for seamless wrap
+            text(draw, (message_width, 0), message, fill="white", font=font)
+        
         offset = 0
+        scroll_speed = SCROLL_SPEED  # Seconds per pixel
         while True:
             virtual.set_position((offset, 0))
-            if self._wait_or_stop(DEFAULT_ANIMATION_INTERVAL, should_stop):
+            if self._wait_or_stop(scroll_speed, should_stop):
                 break
             offset += 1
-            if offset >= score_width:
+            if offset >= message_width:
                 offset = 0
     
     def _wait_or_stop(self, duration: float, should_stop) -> bool:

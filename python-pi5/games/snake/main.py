@@ -5,9 +5,7 @@ Sets up the game state, input handler, and renderer.
 from input_handler import InputHandler
 from renderer import Renderer
 from game_state import GameState
-from direction import Direction
 from config import GAME_SPEED
-import time
 
 def game_loop():
     print("Starting the Snake game...")
@@ -16,28 +14,36 @@ def game_loop():
     input_handler = InputHandler()
     renderer = Renderer()
     
-    # Loop intro animation until button is pressed
-    renderer.play_intro_animation_loop(should_stop=input_handler.is_button_pressed)
-    
+    while True:
+        # Loop intro animation until button is pressed
+        renderer.play_intro_animation_loop(should_stop=input_handler.is_button_pressed)
+        
+        score = _play_game(input_handler, renderer)
+        
+        renderer.play_game_over_animation(score, should_stop=input_handler.is_button_pressed)
+        print(f"Game over! Score: {score}")
+
+def _play_game(input_handler, renderer):
     print("Game starting...")
     game_state = GameState()
     speed = GAME_SPEED
 
-    renderer.draw_frame(game_state)
+    renderer.draw_game_frame(game_state)
     print(f"Score: {game_state.score}")
 
     while not game_state.game_over:
         direction = input_handler.poll_for_direction_input(timeout=speed)
         
+        # move_snake handles: direction validation, movement, food eating, collision
         game_state.move_snake(direction)
-        game_state.check_collision()
         
-        if game_state.check_food_collision():
-            game_state.eat_food()
-        
-        renderer.draw_frame(game_state)
+        renderer.draw_game_frame(game_state)
         print(f"Score: {game_state.score}")
+    return game_state.score
 
 
 if __name__ == "__main__":
-    game_loop()
+    try:
+        game_loop()
+    except KeyboardInterrupt:
+        print("\nExiting...")

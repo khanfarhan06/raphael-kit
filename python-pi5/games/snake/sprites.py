@@ -26,6 +26,7 @@ class Sprite(Enum):
     CROSS_QUARTER = auto()
     CROSS_DOT = auto()
     EMPTY = auto()
+    FULL = auto()  # All LEDs on
 
 
 # Raw hex values for each sprite (1=OFF, 0=ON format)
@@ -42,6 +43,7 @@ _SPRITE_HEX = {
     Sprite.CROSS_QUARTER: 0x0000241818240000,
     Sprite.CROSS_DOT: 0x0000001818000000,
     Sprite.EMPTY: 0x0000000000000000,
+    Sprite.FULL: 0xffffffffffffffff,  # All LEDs on
 }
 
 
@@ -55,13 +57,13 @@ def _hex_to_pattern(hex_value: int) -> list[list[int]]:
         row_pixels = []
         for col in range(8):
             bit = (byte >> (7 - col)) & 1
-            row_pixels.append(bit)  # Invert: 0→1, 1→0
+            row_pixels.append(bit)
         pattern.append(row_pixels)
     return pattern
 
 
 # Pre-computed patterns at module load time
-# Access via: SPRITES[Sprite.RIGHT]
+# Access via: SPRITES[Sprite.FACE_RIGHT]
 SPRITES: dict[Sprite, list[list[int]]] = {
     sprite: _hex_to_pattern(hex_val) 
     for sprite, hex_val in _SPRITE_HEX.items()

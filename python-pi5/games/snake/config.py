@@ -1,5 +1,5 @@
 """
-COnfiguration for constant values used in the snake game.
+Configuration for constant values used in the snake game.
 """
 
 # Joystick MCP3008 Software SPI Pins
@@ -23,3 +23,4 @@ BOARD_HEIGHT = 8
 INITIAL_SNAKE_LENGTH = 3
 INPUT_POLL_INTERVAL = 0.05  # Interval to poll joystick input in seconds
 DEFAULT_ANIMATION_INTERVAL = 0.5  # Interval between animation frames in seconds
+SCROLL_SPEED = 0.08  # Seconds per pixel for scrolling score
