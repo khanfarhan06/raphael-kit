@@ -1,0 +1,105 @@
+(venv) dork-knight@raspberrypi:~/code/pi-projects/raphael-kit $ python3 python-pi5/2.1.9_3_joystick_software_spi.py 
+==================================================
+Joystick - Software SPI Mode (MCP3008)
+==================================================
+
+Wiring required:
+  MCP3008:
+    VDD/VREF -> Pin 1  (3.3V)
+    AGND/DGND -> Pin 6 (Ground)
+    CLK      -> Pin 29 (GPIO 5)
+    DOUT     -> Pin 31 (GPIO 6)
+    DIN      -> Pin 33 (GPIO 13)
+    CS       -> Pin 35 (GPIO 19)
+  Joystick:
+    VRX      -> MCP3008 CH0
+    VRY      -> MCP3008 CH1
+    SW       -> Pin 37 (GPIO 26)
+
+✗ Error initializing: 'GPIO busy'
+
+Make sure you've wired correctly to the specified pins.
+Traceback (most recent call last):
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 80, in __call__
+    self = cls._instances[key]()
+           ~~~~~~~~~~~~~~^^^^^
+KeyError: ('GPIO5', 'GPIO19')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 80, in __call__
+    self = cls._instances[key]()
+           ~~~~~~~~~~~~~~^^^^^
+KeyError: ('GPIO5', 'GPIO13', 'GPIO6')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/pi.py", line 411, in pin
+    pin = self.pins[info]
+          ~~~~~~~~~^^^^^^
+KeyError: PinInfo(number=33, name='GPIO13', names=frozenset({'GPIO13', 'BCM13', 'BOARD33', '13', 'WPI23', 'J8:33', 13}), pull='', row=17, col=1, interfaces=frozenset({'', 'gpio', 'spi', 'uart', 'dpi', 'i2c', 'pwm'}))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dork-knight/code/pi-projects/raphael-kit/python-pi5/2.1.9_3_joystick_software_spi.py", line 61, in <module>
+    x_axis = MCP3008(channel=0, clock_pin=MCP_CLK, mosi_pin=MCP_MOSI,
+                     miso_pin=MCP_MISO, select_pin=MCP_CS)
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 108, in __call__
+    self = super().__call__(*args, **kwargs)
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 428, in __init__
+    super().__init__(channel, differential, max_voltage, **spi_args)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 286, in __init__
+    super().__init__(channel, 10, differential, max_voltage, **spi_args)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 182, in __init__
+    super().__init__(bits, max_voltage, **spi_args)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 129, in __init__
+    super().__init__(shared=True, **spi_args)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/spi_devices.py", line 32, in __init__
+    self._spi = self.pin_factory.spi(**spi_args)
+                ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/pi.py", line 472, in spi
+    return self._get_spi_class(shared, hardware=False)(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pin_factory=self, **spi_args)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 83, in __call__
+    self = super().__call__(*args, **kwargs)
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/spi.py", line 45, in __init__
+    self._bus = SPISoftwareBus(
+                ~~~~~~~~~~~~~~^
+        clock_pin, mosi_pin, miso_pin, pin_factory=pin_factory)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 83, in __call__
+    self = super().__call__(*args, **kwargs)
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/spi.py", line 152, in __init__
+    self.mosi = OutputDevice(mosi_pin, pin_factory=pin_factory)
+                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 108, in __call__
+    self = super().__call__(*args, **kwargs)
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/output_devices.py", line 74, in __init__
+    super().__init__(pin, pin_factory=pin_factory)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/mixins.py", line 75, in __init__
+    super().__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/devices.py", line 553, in __init__
+    pin = self.pin_factory.pin(pin)
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/pi.py", line 413, in pin
+    pin = self.pin_class(self, info)
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/gpiozero/pins/lgpio.py", line 126, in __init__
+    lgpio.gpio_claim_input(
+    ~~~~~~~~~~~~~~~~~~~~~~^
+        self.factory._handle, self._number, lgpio.SET_PULL_NONE)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/lgpio.py", line 755, in gpio_claim_input
+    return _u2i(_lgpio._gpio_claim_input(handle&0xffff, lFlags, gpio))
+  File "/home/dork-knight/code/pi-projects/raphael-kit/venv/lib/python3.13/site-packages/lgpio.py", line 458, in _u2i
+    raise error(error_text(v))
+lgpio.error: 'GPIO busy'
