@@ -1,0 +1,8 @@
+.vscode/*
+*.ai
+*.indd
+docs/build/*
+.github/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
