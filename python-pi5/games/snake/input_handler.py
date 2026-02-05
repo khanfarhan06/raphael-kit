@@ -33,21 +33,20 @@ class InputHandler:
         x = self.joystick_x.value
         y = self.joystick_y.value
 
-        threshold = 0.1
+        threshold_radius = 0.1
         mid = 0.5
-        direction = Direction.NONE
 
-        if x < mid - threshold:
-            direction = Direction.LEFT
-        elif x > mid + threshold:
-            direction = Direction.RIGHT
-        elif y < mid - threshold:
-            direction = Direction.UP
-        elif y > mid + threshold:
-            direction = Direction.DOWN
-        print(f"Joystick X: {x:.2f}, Y: {y:.2f}, Direction: {direction}")
-        
-        return direction
+        dx = x - mid
+        dy = y - mid
+        distance_squared = (dx*dx + dy*dy)
+
+        if distance_squared < threshold_radius * threshold_radius:
+            return Direction.NONE
+            
+        if abs(dx) > abs(dy):
+                return Direction.LEFT if dx < 0 else Direction.RIGHT
+        else:
+                return Direction.UP if dy < 0 else Direction.DOWN
     
     def poll_for_direction_input(self, timeout):
         last_direction = Direction.NONE
