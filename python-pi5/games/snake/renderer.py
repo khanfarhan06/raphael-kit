@@ -22,7 +22,7 @@ from luma.core.render import canvas
 from luma.core.virtual import viewport
 from luma.led_matrix.device import max7219
 from luma.core.legacy import text, textsize
-from luma.core.legacy.font import proportional, CP437_FONT
+from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT
 from sprites import Sprite, SPRITES
 import time
 
@@ -190,16 +190,16 @@ class Renderer:
         #    ↑_____________↑
         #    message_width (one full cycle)
         
-        message = f"Score: {score}  "  # Extra space for gap
+        message = f"{score}  "  # Extra space for gap
         font = proportional(CP437_FONT)
         message_width, _ = textsize(message, font)
         
         virtual = viewport(self.matrix, width=200, height=8)
         with canvas(virtual) as draw:
             # First copy
-            text(draw, (0, 0), message, fill="white", font=font)
+            text(draw, (0, 1), message, fill="white", font=font)
             # Second copy for seamless wrap
-            text(draw, (message_width, 0), message, fill="white", font=font)
+            text(draw, (message_width, 1), message, fill="white", font=font)
         
         offset = 0
         scroll_speed = SCROLL_SPEED  # Seconds per pixel

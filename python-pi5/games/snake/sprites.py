@@ -2,7 +2,7 @@
 Sprite definitions for 8x8 LED matrix animations.
 
 Each sprite is a 64-bit hex value representing an 8x8 bitmap.
-Hex format: 0xROW0ROW1ROW2ROW3ROW4ROW5ROW6ROW7
+Hex format: 0xROW76ROW5ROW4ROW3ROW2ROW1ROW0
 - Each byte is one row, MSB = leftmost pixel
 
 Usage:
@@ -53,13 +53,12 @@ def _hex_to_pattern(hex_value: int) -> list[list[int]]:
     """
     pattern = []
     for row in range(8):
-        byte = (hex_value >> (56 - row * 8)) & 0xFF
+        byte = (hex_value >> (row * 8)) & 0xFF
         row_pixels = []
         for col in range(8):
-            bit = (byte >> (7 - col)) & 1
+            bit = (byte >> (col)) & 1
             row_pixels.append(bit)
-        pattern.append(row_pixels)
-    pattern.reverse()  # Reverse to match top-down order
+        pattern.append(row_pixels) 
     return pattern
 
 

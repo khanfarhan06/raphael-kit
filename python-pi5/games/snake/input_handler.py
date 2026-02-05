@@ -45,6 +45,7 @@ class InputHandler:
             direction = Direction.UP
         elif y > mid + threshold:
             direction = Direction.DOWN
+        print(f"Joystick X: {x:.2f}, Y: {y:.2f}, Direction: {direction}")
         
         return direction
     

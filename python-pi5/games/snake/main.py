@@ -39,7 +39,6 @@ def _play_game(input_handler: InputHandler, renderer: Renderer) -> GameState:
         game_state.move_snake(direction)
         
         renderer.draw_game_frame(game_state)
-        print(f"Score: {game_state.score}")
     
     return game_state
 
